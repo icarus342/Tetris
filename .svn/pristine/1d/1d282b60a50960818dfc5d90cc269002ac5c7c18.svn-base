@@ -1,0 +1,68 @@
+package zelda;
+
+import java.awt.Image;
+
+import javax.swing.ImageIcon;
+
+
+public enum Link {
+    
+    /** Sound for when a piece freezes in place. */
+    LINK_1("./images/link_1.gif"),
+    /** Sound for when a row(s) of blocks is cleared. */
+    LINK_2("./images/link_2.gif"),
+    /** Sound for when an error in the menu occurs. */
+    LINK_3("./images/link_3.gif"),
+    /** Sound for when an error in the menu occurs. */
+    LINK_4("./images/link_4.gif"),
+    LINK_5("./images/link_5.gif"),
+    LINK_6("./images/link_6.gif");
+   
+//    public static final Link END = LINK_6;
+    private Image myImage;
+    
+    Link(final String theImagePath) {
+        myImage = new ImageIcon(theImagePath).getImage();
+    }
+    
+    
+    public Image getImage() {
+        return myImage;
+    }
+    
+    
+    public Link advance() {
+        Link result = LINK_1;
+
+        switch (this) {
+            case LINK_1:
+                result = LINK_2;
+                break;
+
+            case LINK_2:
+                result = LINK_3;
+                break;
+
+            case LINK_3:
+                result = LINK_4;
+                break;
+                
+            case LINK_4:
+                result = LINK_5;
+                break;
+                
+            case LINK_5:
+                result = LINK_6;
+                break;
+                
+            case LINK_6:
+                result = LINK_1;
+                break;
+                
+            default:
+        }
+
+        return result;
+    } 
+    
+}

@@ -1,0 +1,135 @@
+/*
+ * TCSS 305 – Winter 2015
+ * Assignment 6 - Tetris
+ */
+
+package gui;
+
+
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Observable;
+import java.util.Observer;
+
+import javax.swing.BoxLayout;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.Timer;
+
+import model.Board;
+import model.Board.GameStatus;
+import model.TetrisPiece;
+
+
+
+
+/**
+ * The graphical representation of Tetris.
+ * 
+ * @author Justin Arnett (jarnett@uw.edu)
+ * @version 01 March 2015
+ */
+@SuppressWarnings("serial")
+public class TetrisGUI extends JFrame implements Observer {
+    
+    
+    private Board myTetris;
+    private GamePanel myGamePanel;
+    private Timer myTimer;
+    private TetrisPiece myNextPiece;
+    
+    
+    
+    /**
+     * The GUI of Tetris.
+     */
+    public TetrisGUI() {
+        super();
+        myTetris = new Board();
+        myTimer = new Timer(1000, new MoveListener());
+        myGamePanel = new GamePanel(myTetris, myTimer, this);
+        
+    }
+    
+
+    /**
+     * Builds the main frame of the GUI.
+     */
+    public void start() {
+        
+        myTimer.start();
+                
+        
+        myGamePanel.setLayout(new BoxLayout(myGamePanel, BoxLayout.PAGE_AXIS));
+        
+        
+        
+        add(myGamePanel, BorderLayout.CENTER);
+        
+        JPanel eastPanel = new JPanel();
+        
+        NextPiecePanel piecePanel = new NextPiecePanel(myNextPiece);
+        
+        eastPanel.add(piecePanel, BorderLayout.NORTH);
+        
+        add(eastPanel, BorderLayout.EAST);
+        
+        MenuBar menu = new MenuBar(myGamePanel);
+        setJMenuBar(menu);
+        
+        
+        myTetris.addObserver(this);
+        myTetris.addObserver(myGamePanel);
+        myTetris.addObserver(piecePanel);
+        myTetris.clear();
+        
+        this.setMinimumSize(new Dimension(420, 480));
+        this.setTitle("TCSS 305 Tetris");
+        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        this.setVisible(true);
+        pack();
+        this.setLocationRelativeTo(null);
+    }
+
+
+    /**
+     * The update method for the Observer interface.
+     * 
+     * @param theObj The observable that called us.
+     * @param theArg The argument it passed us.
+     */
+    public void update(final Observable theObj, final Object theArg) {
+        if (theArg instanceof GameStatus && ((GameStatus) theArg).isGameOver()) {
+            myTimer.stop(); // need to also pause the board
+            myGamePanel.gameOver();
+        } else if (theArg instanceof TetrisPiece) {
+            myNextPiece = (TetrisPiece) theArg;
+        }
+        
+        
+    }
+    
+    
+    
+    
+    
+    private class MoveListener implements ActionListener {
+        /**
+         * Advances the Tetris game a step.
+         * 
+         * @param theEvent The event triggering the action.
+         */
+        public void actionPerformed(final ActionEvent theEvent) {
+            myTetris.step();
+        }
+        
+    }
+
+
+
+
+
+
+}

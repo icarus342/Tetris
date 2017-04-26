@@ -1,0 +1,84 @@
+/*
+ * TCSS 305 – Winter 2015
+ * Assignment 6 - Tetris
+ */
+
+package sound;
+
+import java.io.File;
+
+/**
+ * This enum encapsulates all the music of the game.
+ * 
+ * @author Justin Arnett
+ * @version 12 March 2015
+ */
+public enum MusicList {
+    
+    
+    /** Main music of the tetris game. */
+    MAIN("./music/main.wav"),
+    /** Music for when the game is over. */
+    GAME_OVER("./music/game_over.wav"),
+    /** The main music of the zelda theme. */
+    OVERWORLD("./music/overworld.wav");
+   
+    
+    /** State of sound. */
+    private boolean myMuted;
+
+    /** Each sound effect has its own clip, loaded with its own sound file. */
+    private File mySoundFile;
+
+    
+    /**
+     * Constructor to construct each element of the enum with its own sound file.
+     * 
+     * @param theSoundFileName The name of the sound file.
+     */
+    MusicList(final String theSoundFileName) {
+        mySoundFile = new File(theSoundFileName);
+    }
+
+    
+    /**
+     * Play or Re-play the sound effect from the beginning, by rewinding.
+     * 
+     * @param thePlayer The music player.
+     */
+    public void play(final MusicPlayer thePlayer) {
+        final File[] files = {mySoundFile};
+        
+        if (!myMuted) {
+            thePlayer.newList(files);
+            thePlayer.play(); 
+        }
+        
+    }
+    
+    
+    
+    /**
+     * Mutes and unmutes the sound player.
+     * 
+     * @param theVolume Status of the player being muted.
+     * @param thePlayer The music player.
+     */
+    public void setVolume(final boolean theVolume, final MusicPlayer thePlayer) {
+        myMuted = theVolume;
+        if (myMuted) {
+            thePlayer.stopPlay();
+        }
+    }
+
+
+    /**
+     * Optionally pre-loads all of the sound files.
+     * 
+     * @param thePlayer The music Player.
+     */
+    static void init(final MusicPlayer thePlayer) {
+        values(); // calls the constructor for all the elements
+    }
+
+}
